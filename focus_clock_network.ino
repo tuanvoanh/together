@@ -26,4 +26,5 @@ void loop() {
     Serial.print("Set circle :");
     Serial.print(circleRead());
   }
+  
 }
