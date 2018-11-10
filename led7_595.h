@@ -3,9 +3,9 @@
 
 #include "stdint.h"
 
-#define DATACLOCK_PIN 0 //DS PIN IN 74HC595 (PIN14)
-#define STORAGECLOCK_PIN 4 //ST_CP PIN IN 74HC595 (PIN12)
-#define DATA_PIN 5 // SH_CP PIN IN 54HC595 (PIN11)
+#define DATACLOCK_PIN 12 //DS PIN IN 74HC595 (PIN14)
+#define STORAGECLOCK_PIN 14 //ST_CP PIN IN 74HC595 (PIN12)
+#define DATA_PIN 16 // SH_CP PIN IN 54HC595 (PIN11)
 
 #define SCAN 1 //delay time after display 1 digic
 

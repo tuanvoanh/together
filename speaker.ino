@@ -48,7 +48,7 @@ void checkAlarm(uint8_t vHour, uint8_t vMin,uint8_t gHour, uint8_t gMin)
 void setPeriod(uint8_t vMin)
 {
   static unsigned long vTime=millis();
-  if (millis()-vTime>=60000*vMin)
+  if (millis()-vTime>60000*vMin)
   {
     setAlarm(2);
     vTime=millis();
