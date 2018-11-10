@@ -22,10 +22,8 @@ int hourSetRead(); // lấy giờ mới
 int minuteSetRead(); // lấy phút mới 
  
 int alarmAvailable(); //có hẹn giờ mới 
-int alarmHouread();   // lấy giờ hẹn mới 
-int alarmMinutread(); // lấy phút hẹn mới   
+int alarmHourRead();   // lấy giờ hẹn mới 
+int alarmMinutRead(); // lấy phút hẹn mới   
 
 int circleAvailable(); // có chu kỳ mới 
 int circleRead();      // lấy chu kỳ mới  
-
-
