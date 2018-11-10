@@ -85,7 +85,7 @@ uint8_t readDS1307_min()
 
 uint8_t readDS1307_second()
 {
-     digitalWrite(LED_STATUS,HIGH);
+     //digitalWrite(LED_STATUS,HIGH);
      Wire.beginTransmission(DS1307);
      Wire.write((byte)0x00);
      Wire.endTransmission();
@@ -93,7 +93,7 @@ uint8_t readDS1307_second()
      second = bcd2dec(Wire.read() & 0x7f);
      minute = bcd2dec(Wire.read() );
      hour   = bcd2dec(Wire.read() & 0x3f); // chế độ 24h.
-     digitalWrite(LED_STATUS,LOW);
+     //digitalWrite(LED_STATUS,LOW);
      return second;
 }
 /* Chuyển từ format BCD (Binary-Coded Decimal) sang Decimal */
@@ -114,7 +114,7 @@ void setTime(byte hr, byte mini, byte sec, byte wd, byte d, byte mth, byte yr)
         {
           Serial.println("error in READ");
           //set_time(hour,minute,second);
-          digitalWrite(LED_STATUS,HIGH);
+          //digitalWrite(LED_STATUS,HIGH);
           //return ERRORR;
         }
         Wire.beginTransmission(DS1307);
@@ -127,6 +127,6 @@ void setTime(byte hr, byte mini, byte sec, byte wd, byte d, byte mth, byte yr)
         Wire.write(dec2bcd(mth));
         Wire.write(dec2bcd(yr));
         Wire.endTransmission();
-        digitalWrite(LED_STATUS,LOW);
+        //digitalWrite(LED_STATUS,LOW);
 }
 
