@@ -1,57 +1,87 @@
-int gAlarm;
-unsigned long vTime;
+#include "speaker.h"
 
-void setAlarm(uint8_t data)
-{   
-  if (data==0) gAlarm=0;
-  if (gAlarm==0)
-  {
-      vTime=0;
-        if (data==1) gAlarm=1;
-          else if (data==2) gAlarm=-4;
-  }
-}
-void outputAlarm()
+static uint8_t gAlarmHour=25,gAlarmMin=0,gPeriodHour=25,gPeriodMin=0;
+static uint8_t gPeriod=0;
+static int gSpeaker=0;
+
+void speakerInit()
 {
-  Serial.println(gAlarm);
-  if (gAlarm==0) return;
+  pinMode(SPEAKER_PIN,OUTPUT);
+}
+
+void speakerToggle()
+{
+  digitalWrite(SPEAKER_PIN,!digitalRead(SPEAKER_PIN));
   
-  if (gAlarm>0)
-    {
-      if ( (vTime==0) || ((millis()-vTime)>=TIMER) )
-          {
-              
-              if ((gAlarm++ % 16)>=8) digitalWrite(SPEAKER_PIN,0);
-              else
-              digitalWrite(SPEAKER_PIN,!digitalRead(SPEAKER_PIN));
-              vTime=millis();
-          }
-      
-    }
-  else
-    {
-      if ( (vTime==0) || ((millis()-vTime)>=PERIOD) )
-          {
-              digitalWrite(SPEAKER_PIN,!digitalRead(SPEAKER_PIN));
-              vTime=millis();
-              gAlarm++;
-              
-          }
-    }
 }
+void nextperiodUpdate(uint8_t pHour,uint8_t pMin)
+{
+  gPeriodHour=pHour+(uint8_t)((pMin+gPeriod)/60);
+  gPeriodMin = (pMin+gPeriod)%60; 
+  
+}
+void periodUpdate(uint8_t pPeriod,uint8_t pHour,uint8_t pMin)
+{
+  gPeriod=pPeriod;
+  nextperiodUpdate(pHour,pMin);
 
-void checkAlarm(uint8_t vHour, uint8_t vMin,uint8_t gHour, uint8_t gMin)
-{
-  if ( (vHour==gHour)&&(vMin==gMin) ) setAlarm(1);
-  if ( (vHour==gHour)&&((vMin+1)==gMin) ) setAlarm(0);
 }
-void setPeriod(uint8_t vMin)
+void alarmUpdate(uint8_t pHour, uint8_t pMin)
 {
-  static unsigned long vTime=millis();
-  if (millis()-vTime>60000*vMin)
+  gAlarmHour=pHour;
+  gAlarmMin = pMin;
+
+}
+uint8_t speakerAvai(uint8_t pHour,uint8_t pMin)
+{
+  
+  //Check Alarm
+  if ( (pHour==gAlarmHour)&&(pMin==gAlarmMin) )
   {
-    setAlarm(2);
-    vTime=millis();
+    gSpeaker=1;
+    if ( (pHour==gPeriodHour)&&(pMin==gPeriodMin) )
+          nextperiodUpdate(pHour,pMin);
+    return 1;   
   }
+  //Check period
+  if ( (pHour==gPeriodHour)&&(pMin==gPeriodMin) )
+  {
+    gSpeaker=-4;
+    nextperiodUpdate(pHour,pMin);
+    return 1;
+  }
+  return 0;
 }
-
+uint8_t speakerOutput()
+{
+  static unsigned long vTime=0;
+  if ((gSpeaker==0)||(gSpeaker==30))//850))
+  {
+    vTime=0;
+    gSpeaker=0;
+    digitalWrite(SPEAKER_PIN,0);
+    return 0;
+    
+  } 
+  if (gSpeaker<0)
+  {    
+    if ( (millis()-vTime)>=PERIOD)
+    {
+        speakerToggle();
+        gSpeaker++;
+        vTime=millis();
+    }
+  }
+  else if (gSpeaker>0)
+  {
+    if ( ( (millis()-vTime)>=ALARM) )
+    {
+        
+        gSpeaker++;
+        vTime=millis();
+        if ((gSpeaker%16)<8)
+            speakerToggle();
+    }
+  }
+  return 1;
+}

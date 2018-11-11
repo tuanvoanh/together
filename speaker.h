@@ -1,18 +1,23 @@
 #ifndef __SPEAKER_H__
 #define __SPEAKER_H__
 
+
+
 #define SPEAKER_PIN 13
 
-#define TIMER 70
-#define PERIOD 400
 
-void setAlarm(uint8_t data);//use to set alarm
-// data=1: set Timer Alarm (turn off until setAlarm(0))
-// data=2: set period Alarm (turn off after 2 tone)
-// data=0: turn off all sound
+#define ALARM 70
+#define PERIOD 500
 
-void outputAlarm(); //use this in loop function
-void checkAlarm(uint8_t vHour, uint8_t vMin,uint8_t gHour, uint8_t gMin); //Use this in loop to Check and set alarm
-void setPeriod(uint8_t vMin); //use this in loop to check period time in minute
+
+void speakerInit();
+
+void periodUpdate(uint8_t pPeriod,uint8_t pHour,uint8_t pMin);
+void alarmUpdate(uint8_t pHour, uint8_t pMin);
+
+uint8_t speakerAvai(uint8_t pHour,uint8_t pMin);//Check alarm after 1 min
+uint8_t speakerOutput();// If speakerAvai, run this until it return 0;
+
+
 
 #endif
