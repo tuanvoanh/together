@@ -1,25 +1,31 @@
 
-
-
 uint8_t gLED[11]={0x05,0x7D,0x46,0x54,0x3C,0x94,0x84,0x5D,0x04,0x14,0xFF};
 uint8_t gDigit[5]={0,1,2,4,8};
-
+void displayInit()
+{
+  //
+  pinMode(DATACLOCK_PIN, OUTPUT);
+  pinMode(STORAGECLOCK_PIN,OUTPUT);
+  pinMode(DATA_PIN, OUTPUT);
+}
 void dataSend(uint8_t vData)
 {
   for (uint8_t i=0;i<=7;i++)
   {
   
-      digitalWrite(DATA_PIN,(vData&(1<<i))>>i);     
+      digitalWrite(DATA_PIN,(vData&(1<<i))>>i); 
+      delayMicroseconds(100);    
       digitalWrite(DATACLOCK_PIN,1);
       digitalWrite(DATACLOCK_PIN,0);
   }
 }
 void dataLatch(uint8_t vData)
 {
-  digitalWrite(STORAGECLOCK_PIN,0);
-  dataSend(vData);
-  digitalWrite(STORAGECLOCK_PIN,1);
   
+  dataSend(vData);
+  delayMicroseconds(100);   
+  digitalWrite(STORAGECLOCK_PIN,1);
+  digitalWrite(STORAGECLOCK_PIN,0);
 }
 
 void ledDisplay(uint8_t  vHour, uint8_t  vMin)

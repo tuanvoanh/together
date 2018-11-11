@@ -1,7 +1,7 @@
 #ifndef __SPEAKER_H__
 #define __SPEAKER_H__
 
-#define SPEAKER_PIN 0
+#define SPEAKER_PIN 13
 
 #define TIMER 70
 #define PERIOD 400
